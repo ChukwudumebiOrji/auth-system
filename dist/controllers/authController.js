@@ -71,4 +71,13 @@ exports.recoverPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
     });
 });
-exports.resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () { });
+exports.resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, newPassword } = req.body;
+    const hash = bcrypt.hashSync(newPassword, 12);
+    try {
+        yield userModel.findOneAndUpdate({ email }, { password: newPassword });
+    }
+    catch (err) {
+        next(err);
+    }
+});

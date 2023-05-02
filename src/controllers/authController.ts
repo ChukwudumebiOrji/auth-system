@@ -83,4 +83,14 @@ exports.resetPassword = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {}
+) => {
+  const { email, newPassword } = req.body
+
+  const hash = bcrypt.hashSync(newPassword, 12)
+
+  try {
+    await userModel.findOneAndUpdate({ email }, { password: newPassword })
+  } catch (err) {
+    next(err)
+  }
+}
